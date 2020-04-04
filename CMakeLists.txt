@@ -39,20 +39,20 @@ if (ENABLE_PCH)
   target_precompile_headers(project_options INTERFACE <vector> <string> <map> <utility>)
 endif()
 
-
-# Set up some extra Conan dependencies based on our needs
-# before loading Conan
-
-set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES}
-                         imgui-sfml/2.1@bincrafters/stable)
-
 # set(CONAN_EXTRA_OPTIONS ${CONAN_EXTRA_OPTIONS} sfml:shared=False
 # sfml:graphics=True sfml:audio=False sfml:window=True
 # libalsa:disable_python=True)
 
+option(USE_CONAN_ALL "Use conan for all dependencies" ON)
 
 include(cmake/Conan.cmake)
-run_conan()
+run_conan(ALL "${USE_CONAN_ALL}")
+
+find_package(Catch2 REQUIRED)
+find_package(docopt.cpp REQUIRED)
+find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(ImGui-SFML REQUIRED)
 
 if(ENABLE_TESTING)
   enable_testing()
