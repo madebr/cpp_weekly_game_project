@@ -1,6 +1,5 @@
-dist: bionic
-sudo: false
 language: cpp
+dist: bionic
 
 addons:
   apt:
@@ -9,16 +8,14 @@ addons:
     packages:
       - gcc-snapshot
       - doxygen
+env:
+  - CC=/usr/lib/gcc-snapshot/bin/gcc CXX=/usr/lib/gcc-snapshot/bin/g++ GCOV=/usr/lib/gcc-snapshot/bin/gcov
 
 install:
   - pip install --user conan cmake
 
-
 script:
-  - CXX=/usr/bin/gcc-10 CC=/usr/bin/g++-10 cmake -D ENABLE_COVERAGE:BOOL=TRUE . 
+  - cmake -D ENABLE_COVERAGE:BOOL=TRUE . 
   - cmake --build . -- -j2 
   - ctest -j2
-  - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-5
-
-
-
+  - bash <(curl -s https://codecov.io/bash) -x $GCOV
